@@ -17,8 +17,8 @@ type Config struct {
 	AppEnv          string `json:"app_env"`
 }
 
-func LoadConfigs() (*Config, error) {
-	err := godotenv.Load()
+func LoadConfigs(envFilePath string) (*Config, error) {
+	err := godotenv.Load(envFilePath)
 
 	if err != nil {
 		return nil, err
