@@ -9,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type CreateShortURLParams struct {
@@ -21,7 +22,7 @@ func (q *Queries) CreateShortURL(ctx context.Context, config *config.Config, arg
 	var shortCode string
 
 	for {
-		shortCode = utils.GenerateShortCode(config.ShortCodeLength, config.AllowedChars)
+		shortCode = utils.GenerateShortCode(config)
 		count, err := collection.CountDocuments(ctx, bson.M{"shortCoce": shortCode})
 
 		if err != nil {
@@ -78,19 +79,30 @@ type UpdateShortURLParams struct {
 
 func (q *Queries) UpdateShortURL(ctx context.Context, arg UpdateShortURLParams) (URL, error) {
 	collection := q.client.Database("main").Collection("urls")
-	var url URL
-	err := collection.FindOne(ctx, bson.M{"shortCode": arg.ShortCode}).Decode(&url)
 
-	if err != nil {
-		return URL{}, nil
-	}
-	_, err = collection.UpdateOne(ctx, bson.M{"shortCode": arg.ShortCode}, bson.M{"url": arg.URL})
-
-	if err != nil {
-		return URL{}, nil
+	update := bson.M{
+		"$set": bson.M{
+			"url":       arg.URL,
+			"updatedAt": time.Now(),
+		},
 	}
 
-	return url, nil
+	opts := options.FindOneAndUpdate().SetReturnDocument(options.After)
+
+	var updatedShortURL URL
+
+	err := collection.FindOneAndUpdate(
+		ctx,
+		bson.M{"shortCode": arg.ShortCode},
+		update,
+		opts,
+	).Decode(&updatedShortURL)
+
+	if err != nil {
+		return URL{}, err
+	}
+
+	return updatedShortURL, nil
 }
 
 func (q *Queries) DeleteShortURL(ctx context.Context, shortCode string) error {
