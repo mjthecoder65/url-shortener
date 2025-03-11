@@ -3,17 +3,15 @@ package utils
 import (
 	"math/rand"
 	"time"
-
-	"github.com/mjthecoder65/url-shortener/config"
 )
 
-func GenerateShortCode(config *config.Config) string {
+func GenerateShortCode(shortedCodeLength int, allowedChars string) string {
 	rand := rand.New(rand.NewSource(time.Now().UnixNano()))
 
-	result := make([]byte, config.ShortCodeLength)
+	result := make([]byte, shortedCodeLength)
 
-	for i := 0; i < config.ShortCodeLength; i++ {
-		result[i] = config.AllowedChars[rand.Intn(len(config.AllowedChars))]
+	for i := 0; i < shortedCodeLength; i++ {
+		result[i] = allowedChars[rand.Intn(len(allowedChars))]
 	}
 
 	return string(result)
