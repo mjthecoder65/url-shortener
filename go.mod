@@ -6,7 +6,6 @@ require (
 	github.com/gin-gonic/gin v1.10.0
 	github.com/joho/godotenv v1.5.1
 	github.com/stretchr/testify v1.9.0
-	github.com/test-go/testify v1.1.4
 	go.mongodb.org/mongo-driver v1.17.3
 )
 
