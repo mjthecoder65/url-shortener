@@ -21,7 +21,7 @@ func (q *Queries) CreateShortURL(ctx context.Context, config *config.Config, arg
 	var shortCode string
 
 	for {
-		shortCode = utils.GenerateShortCode(config)
+		shortCode = utils.GenerateShortCode(config.ShortCodeLength, config.AllowedChars)
 		count, err := collection.CountDocuments(ctx, bson.M{"shortCoce": shortCode})
 
 		if err != nil {
