@@ -1,4 +1,4 @@
-name: ci-test
+name: ci-cd
 
 on:
   push:
@@ -47,3 +47,51 @@ jobs:
 
       - name: Test
         run: make test
+
+  build-and-push-image:
+    name: Build and push Docker image
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Check out code into the Go module directory.
+        uses: actions/checkout@v4
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS  }}
+
+      - name: Configure Docker to user Google Artifact Registry
+        run: gcloud auth configure-docker asia-southeast1-docker.pkg.dev
+
+      - name: Create .env file from secrets and variables
+        run: |
+          echo "APP_ENV=${{vars.APP_ENV}}" >> .env
+          echo "MONGODB_PASSWORD=${{ secrets.MONGODB_PASSWORD }}" >> .env
+          echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
+          echo "SERVER_PORT= ${{vars.SERVER_PORT}}" >> .env
+          echo "ALLOWED_CHARS=${{vars.ALLOWED_CHARS}}" >> .env
+          echo "SHORT_CODE_LENGTH=${{vars.SHORT_CODE_LENGTH}}" >> .env
+
+      - name: Build and push Docker image
+        run: |
+          docker build -t asia-southeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ vars.ARTIFACT_REGISTRY_REPO }}/url-shortener:${{ github.sha }} .
+          docker push asia-southeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ vars.ARTIFACT_REGISTRY_REPO }}/url-shortener:latest
+
+  deploy:
+    name: Deploy to Cloud Run
+    runs-on: ubuntu-latest
+    needs: build-and-push-image
+    steps:
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS  }}
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy url-shortener \
+            --image asia-southeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ vars.ARTIFACT_REGISTRY_REPO }}/url-shortener:latest \
+            --platform managed \
+            --region asia-southeast1 \
+            --allow-unauthenticated
