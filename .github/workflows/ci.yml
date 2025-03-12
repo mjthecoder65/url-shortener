@@ -14,16 +14,12 @@ jobs:
     services:
       mongodb:
         image: mongo:latest
-        ports:
-          - "27017:27017"
-        env:
-          MONGO_INITDB_ROOT_USERNAME: ${{ vars.MONGODB_USERNAME }}
-          MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
         options: >-
-          --health-cmd "mongo --username $MONGO_INITDB_ROOT_USERNAME --password $MONGO_INITDB_ROOT_PASSWORD --eval 'db.stats().ok'" 
-          --health-interval 10s 
-          --health-timeout 10s 
-          --health-retries 10
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 27017:27017
 
     steps:
       - name: Set up Go
