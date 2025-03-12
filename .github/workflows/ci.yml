@@ -77,7 +77,7 @@ jobs:
       - name: Build and push Docker image
         run: |
           docker build -t ${{ vars.ARTIFACT_REGISTRY_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.ARTIFACT_REGISTRY_REPO }}/url-shortener:${{ github.sha }} .
-          docker push ${{ vars.ARTIFACT_REGISTRY_REGION }}.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.ARTIFACT_REGISTRY_REPO }}/url-shortener:${{ github.sha }}
+          docker push ${{ vars.ARTIFACT_REGISTRY_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.ARTIFACT_REGISTRY_REPO }}/url-shortener:${{ github.sha }}
 
   deploy:
     name: Deploy to Cloud Run
