@@ -95,6 +95,8 @@ jobs:
 
       - name: Deploy to Cloud Run
         run: |
+          echo "Executing command:"
+          echo "gcloud run deploy url-shortener --image ${{ vars.ARTIFACT_REGISTRY_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.ARTIFACT_REGISTRY_REPO }}/url-shortener:${{ github.sha }} --platform managed --region ${{ vars.ARTIFACT_REGISTRY_REGION }} --allow-unauthenticated --service-account ${{ vars.CLOUD_RUN_SERVICE_ACCOUNT }}"
           gcloud run deploy url-shortener \
             --image ${{ vars.ARTIFACT_REGISTRY_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.ARTIFACT_REGISTRY_REPO }}/url-shortener:${{ github.sha }} \
             --platform managed \
