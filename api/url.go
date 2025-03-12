@@ -64,7 +64,7 @@ func (server *Server) UpdateShortURL(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, errorResponse(err))
 		return
 	}
-	shortCode := ctx.Param("ShortCode")
+	shortCode := ctx.Param("shortCode")
 
 	arg := db.UpdateShortURLParams{
 		ShortCode: shortCode,
