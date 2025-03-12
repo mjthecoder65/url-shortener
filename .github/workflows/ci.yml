@@ -100,3 +100,4 @@ jobs:
             --platform managed \
             --region ${{ vars.ARTIFACT_REGISTRY_REGION }} \
             --allow-unauthenticated
+            --service-account ${{ vars.CLOUD_RUN_SERVICE_ACCOUNT }}
