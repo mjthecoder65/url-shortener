@@ -13,14 +13,18 @@ jobs:
 
     services:
       mongodb:
-        image: mongo:latest
-        options: >-
-          --health-cmd "mongo --eval 'db.runCommand({ping:1})'" 
-          --health-interval 10s
-          --health-timeout 10s
-          --health-retries 10
+        image: mongo:4.4.6
+        env:
+          MONGO_INITDB_ROOT_USERNAME: ${{ vars.MONGODB_USERNAME }}
+          MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+          MONGO_INITDB_DATABASE: main
         ports:
           - 27017:27017
+        options: >-
+          --health-cmd mongo
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Set up Go
