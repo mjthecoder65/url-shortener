@@ -2,8 +2,6 @@
 
 A high-performance URL shortener built with **Golang**, **Gin**, **MongoDB**, and deployed on **Google Cloud Run**. Supports full CRUD operations and tracks URL statistics.
 
-![GitHub last commit](https://github.com/mjthecoder65/url-shortener)
-![GitHub license](https://github.com/mjthecoder65/url-shortener)
 ![Build Status](https://github.com/mjthecoder65/url-shortener/actions/workflows/ci.yml/badge.svg)
 
 ---
