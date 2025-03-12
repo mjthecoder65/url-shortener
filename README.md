@@ -1,160 +1,190 @@
-# 🚀 URL Shortener API
+# URL Shortener API
 
-A high-performance URL shortener built with **Golang**, **Gin**, **MongoDB**, and deployed on **Google Cloud Run**. Supports full CRUD operations and tracks URL statistics.
+A high-performance URL Shortener API built with Go, Gin, MongoDB, and deployed on Cloud Run. This API allows users to create, retrieve, update, delete, and track statistics of shortened URLs.
 
-![Build Status](https://github.com/mjthecoder65/url-shortener/actions/workflows/ci.yml/badge.svg)
+## Features
 
----
+- Create short URLs with a unique code
+- Retrieve original URLs from short codes
+- Update existing short URLs
+- Delete short URLs
+- Track access statistics
+- Dockerized for easy deployment
+- CI/CD with GitHub Actions
 
-## ✨ Features
+## Tech Stack
 
-✅ Shorten long URLs in seconds  
-✅ Retrieve the original URL from a shortcode  
-✅ Update or delete shortened URLs  
-✅ Track access statistics (clicks per URL)  
-✅ Load tested for high performance  
-✅ CI/CD pipeline with **GitHub Actions**  
-✅ Cloud-native deployment with **Cloud Run**
+- **Language**: Go
+- **Framework**: Gin
+- **Database**: MongoDB
+- **Containerization**: Docker
+- **CI/CD**: GitHub Actions
+- **Deployment**: Google Cloud Run
+- **Artifact Registry**: Google Artifact Registry
 
----
+## Installation
 
-## 🔧 Installation
+### Prerequisites
 
-### 1️⃣ Clone the repository
+- Go (>=1.18)
+- Docker & Docker Compose
+- MongoDB
+
+### Clone Repository
 
 ```sh
-git clone https://github.com/mjthecoder10/url-shortener.git
+git clone https://github.com/your-username/url-shortener.git
 cd url-shortener
 ```
 
-### 2️⃣ Set up environment variables
-
-Create a `.env` file with the following:
-
-```plaintext
-MONGO_URI=mongodb://localhost:27017
-ALLOWED_CHARS=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
-SHORT_CODE_LENGTH=6
-```
-
-### 3️⃣ Run with Docker
+### Run Locally
 
 ```sh
 docker-compose up --build
 ```
 
----
-
-## 🚀 API Endpoints
-
-### 1️⃣ Create a Short URL
-
-```http
-POST /shorten
-```
-
-**Request:**
-
-```json
-{
-  "url": "https://www.example.com/long-url"
-}
-```
-
-**Response:**
-
-```json
-{
-  "id": "1",
-  "shortCode": "abc123",
-  "url": "https://www.example.com/long-url",
-  "createdAt": "2025-03-12T12:00:00Z"
-}
-```
-
-### 2️⃣ Retrieve Original URL
-
-```http
-GET /shorten/{shortCode}
-```
-
-**Response:**
-
-```json
-{
-  "id": "1",
-  "shortCode": "abc123",
-  "url": "https://www.example.com/long-url",
-  "accessCount": 10
-}
-```
-
-### 3️⃣ Update a Short URL
-
-```http
-PUT /shorten/{shortCode}
-```
-
-**Request:**
-
-```json
-{
-  "url": "https://www.example.com/updated-url"
-}
-```
-
-### 4️⃣ Delete a Short URL
-
-```http
-DELETE /shorten/{shortCode}
-```
-
-### 5️⃣ Get URL Statistics
-
-```http
-GET /shorten/{shortCode}/stats
-```
-
----
-
-## 📊 Load Testing
-
-Run a performance test using [k6](https://k6.io/):
-
-```sh
-k6 run load_test.js
-```
-
----
-
-## 🎯 Running Tests
+### Run Tests
 
 ```sh
 go test ./...
 ```
 
----
+## API Documentation
 
-## ☁️ Deployment
+### 1. Create Short URL
 
-**To deploy on Cloud Run:**
+**Request:**
 
-```sh
-gcloud builds submit --tag gcr.io/YOUR_PROJECT_ID/url-shortener
-gcloud run deploy url-shortener --image gcr.io/YOUR_PROJECT_ID/url-shortener --platform managed
+```
+POST /shorten
+Content-Type: application/json
+
+{
+  "url": "https://www.example.com/some/long/url"
+}
 ```
 
----
+**Response:**
 
-## 📝 License
+```
+201 Created
+{
+  "id": "1",
+  "url": "https://www.example.com/some/long/url",
+  "shortCode": "abc123",
+  "createdAt": "2021-09-01T12:00:00Z",
+  "updatedAt": "2021-09-01T12:00:00Z"
+}
+```
 
-This project is licensed under the [MIT License](LICENSE).
+### 2. Retrieve Original URL
 
----
+**Request:**
 
-## 👨‍💻 Author
+```
+GET /shorten/abc123
+```
 
-**Michael Jordan Ngowi**
+**Response:**
 
-- GitHub: [@mjthecoder10](https://github.com/mjthecoder10)
-- LinkedIn: [Michael Ngowi](https://www.linkedin.com/in/michael-ngowi/)
+```
+200 OK
+{
+  "id": "1",
+  "url": "https://www.example.com/some/long/url",
+  "shortCode": "abc123",
+  "createdAt": "2021-09-01T12:00:00Z",
+  "updatedAt": "2021-09-01T12:00:00Z"
+}
+```
+
+### 3. Update Short URL
+
+**Request:**
+
+```
+PUT /shorten/abc123
+Content-Type: application/json
+
+{
+  "url": "https://www.example.com/some/updated/url"
+}
+```
+
+**Response:**
+
+```
+200 OK
+{
+  "id": "1",
+  "url": "https://www.example.com/some/updated/url",
+  "shortCode": "abc123",
+  "createdAt": "2021-09-01T12:00:00Z",
+  "updatedAt": "2021-09-01T12:30:00Z"
+}
+```
+
+### 4. Delete Short URL
+
+**Request:**
+
+```
+DELETE /shorten/abc123
+```
+
+**Response:**
+
+```
+204 No Content
+```
+
+### 5. Get URL Statistics
+
+**Request:**
+
+```
+GET /shorten/abc123/stats
+```
+
+**Response:**
+
+```
+200 OK
+{
+  "id": "1",
+  "url": "https://www.example.com/some/long/url",
+  "shortCode": "abc123",
+  "createdAt": "2021-09-01T12:00:00Z",
+  "updatedAt": "2021-09-01T12:00:00Z",
+  "accessCount": 10
+}
+```
+
+## Deployment
+
+### Build and Push Docker Image to Google Artifact Registry
+
+```sh
+gcloud auth configure-docker
+
+docker build -t us-central1-docker.pkg.dev/your-project-id/url-shortener/url-shortener .
+docker push us-central1-docker.pkg.dev/your-project-id/url-shortener/url-shortener
+```
+
+### Deploy to Cloud Run
+
+```sh
+gcloud run deploy url-shortener \
+  --image us-central1-docker.pkg.dev/your-project-id/url-shortener/url-shortener \
+  --platform managed \
+  --region us-central1 \
+  --allow-unauthenticated
+```
+
+## License
+
+This project is licensed under the MIT License.
+
+## Author
+
+[Your Name](https://github.com/your-username)
