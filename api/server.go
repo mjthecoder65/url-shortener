@@ -16,20 +16,26 @@ type Server struct {
 }
 
 func NewServer(config *config.Config, mongoClient *mongo.Client) (*Server, error) {
-	// TODO: Refactor this condition later.
 	if config.AppEnv == "prod" {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
-	router := gin.Default()
 	server := &Server{
 		config:  config,
 		queries: db.New(mongoClient),
-		router:  router,
 	}
 
-	v1 := router.Group("/api/v1")
+	router := SetupRouter(server)
 
+	server.router = router
+
+	return server, nil
+}
+
+func SetupRouter(server *Server) *gin.Engine {
+	router := gin.Default()
+
+	v1 := router.Group("/api/v1")
 	{
 		v1.POST("/shorten", server.CreateShortURL)
 		v1.GET("/shorten/:shortCode", server.GetOrigionalURL)
@@ -38,7 +44,7 @@ func NewServer(config *config.Config, mongoClient *mongo.Client) (*Server, error
 		v1.GET("/shorten/:shortCode/stats", server.GetURLStats)
 	}
 
-	return server, nil
+	return router
 }
 
 func (server *Server) Start() error {
