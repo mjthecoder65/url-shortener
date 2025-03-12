@@ -103,3 +103,4 @@ jobs:
             --concurrency=80
             --service-account=cloud-run-runtime@vegax-429008.iam.gserviceaccount.com
             --allow-unauthenticated
+            --verbosity=debug
