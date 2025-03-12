@@ -11,6 +11,21 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
 
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - "27017:27017"
+        env:
+          MONGO_INITDB_ROOT_USERNAME: ${{ vars.MONGODB_USERNAME }}
+          MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+        options: >-
+          --health-cmd "mongo 
+          --eval 'db.stats().ok'" 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 5
+
     steps:
       - name: Set up Go
         uses: actions/setup-go@v4
@@ -20,6 +35,15 @@ jobs:
 
       - name: Check out code into the Go module directory.
         uses: actions/checkout@v4
+
+      - name: Create .env file from secrets and variables
+        run: |
+          echo "APP_ENV=${{vars.APP_ENV}}" >> .env
+          echo "MONGODB_PASSWORD=${{ secrets.MONGODB_PASSWORD }}" >> .env
+          echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
+          echo "SERVER_PORT= ${{vars.SERVER_PORT}}" >> .env
+          echo "ALLOWED_CHARS=${{vars.ALLOWED_CHARS}}" >> .env
+          echo "SHORT_CODE_LENGTH=${{vars.SHORT_CODE_LENGTH}}" >> .env
 
       - name: Test
         run: make test
