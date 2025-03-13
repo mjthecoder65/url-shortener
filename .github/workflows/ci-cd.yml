@@ -77,7 +77,7 @@ jobs:
           EOF
       - name: Build and push Docker image
         run: |
-          IMAGE_NAME = ${{ vars.ARTIFACT_REGISTRY_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.ARTIFACT_REGISTRY_REPO }}/url-shortener:${{ github.sha }}
+          export IMAGE_NAME=${{ vars.ARTIFACT_REGISTRY_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.ARTIFACT_REGISTRY_REPO }}/url-shortener:${{ github.sha }}
           docker build --platform linux/amd64 -t $IMAGE_NAME .
           docker push $IMAGE_NAME
 
