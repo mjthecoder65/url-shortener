@@ -11,7 +11,7 @@ import (
 
 type Config struct {
 	MongoDBURI      string `json:"database_url"`
-	ServerPort      string `json:"server_port"`
+	ServerPort      string `json:""`
 	ShortCodeLength int    `json:"short_code_length"`
 	AllowedChars    string `json:"allowed_chars"`
 	AppEnv          string `json:"app_env"`
@@ -31,7 +31,7 @@ func LoadConfigs(envFilePath string) (*Config, error) {
 	}
 	return &Config{
 		MongoDBURI:      getEnv("MONGODB_URI"),
-		ServerPort:      getEnv("SERVER_PORT"),
+		ServerPort:      getEnv("SERVER_ADDRESS"),
 		ShortCodeLength: shortCodeLength,
 		AllowedChars:    getEnv("ALLOWED_CHARS"),
 		AppEnv:          getEnv("APP_ENV"),

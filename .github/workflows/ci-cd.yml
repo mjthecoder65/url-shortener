@@ -38,12 +38,14 @@ jobs:
 
       - name: Create .env file from secrets and variables
         run: |
-          echo "APP_ENV=${{vars.APP_ENV}}" >> .env
-          echo "MONGODB_PASSWORD=${{ secrets.MONGODB_PASSWORD }}" >> .env
-          echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
-          echo "SERVER_PORT= ${{vars.SERVER_PORT}}" >> .env
-          echo "ALLOWED_CHARS=${{vars.ALLOWED_CHARS}}" >> .env
-          echo "SHORT_CODE_LENGTH=${{vars.SHORT_CODE_LENGTH}}" >> .env
+          cat <<EOF > .env
+          APP_ENV=${{vars.APP_ENV}}
+          MONGODB_PASSWORD=${{ secrets.MONGODB_PASSWORD }}
+          MONGODB_URI=${{ secrets.MONGODB_URI }}
+          SERVER_ADDRESS= ${{vars.SERVER_ADDRESS}}
+          ALLOWED_CHARS=${{vars.ALLOWED_CHARS}}
+          SHORT_CODE_LENGTH=${{vars.SHORT_CODE_LENGTH}}
+          EOF
 
       - name: Test
         run: make test
@@ -71,7 +73,7 @@ jobs:
           APP_ENV=${{vars.APP_ENV}}
           MONGODB_PASSWORD=${{ secrets.MONGODB_PASSWORD }}
           MONGODB_URI=${{ secrets.MONGODB_URI }}
-          SERVER_PORT= ${{vars.SERVER_PORT}}
+          SERVER_ADDRESS= ${{vars.SERVER_ADDRESS}}
           ALLOWED_CHARS=${{vars.ALLOWED_CHARS}}
           SHORT_CODE_LENGTH=${{vars.SHORT_CODE_LENGTH}}
           EOF

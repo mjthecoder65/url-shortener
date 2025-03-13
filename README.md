@@ -56,7 +56,7 @@ touch .env
 APP_ENV=dev # prod, staging
 MONGODB_URI=mongodb://localhost:27017/main
 MONGODB_PASSWORD=your_mongodb_password
-SERVER_PORT=8080
+SERVER_ADDRESS=:8080
 ALLOWED_CHARS=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
 SHORT_CODE_LENGTH=6
 ```
@@ -106,7 +106,7 @@ Go to **Settings** → **Secrets and variables** → **Actions** → **Variables
 Add the following variables:
 
 - **`APP_ENV`** → `production` (or `development`)
-- **`SERVER_PORT`** → `8080`
+- **`SERVER_ADDRESS`** → `:8080`
 - **`ALLOWED_CHARS`** → `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`
 - **`SHORT_CODE_LENGTH`** → `6`
 - **`ARTIFACT_REGISTRY_REGION`** → Your Google Cloud region (e.g., `us-central1`)
