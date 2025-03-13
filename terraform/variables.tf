@@ -25,7 +25,7 @@ variable "subnet_cidr" {
 variable "connector_cidr" {
   description = "CIDR block for the Serverless VPC Connector subnet (/28 required)"
   type        = string
-  default     = "10.0.0.0/28"
+  default     = "10.0.2.0/28"
 }
 
 variable "redis_size" {

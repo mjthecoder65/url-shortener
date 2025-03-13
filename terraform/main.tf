@@ -1,3 +1,14 @@
+resource "google_project_service" "redis_api" {
+  project            = var.project_id
+  service            = "redis.googleapis.com"
+  disable_on_destroy = false
+}
+
+resource "google_project_service" "vpc_access_api" {
+  project            = var.project_id
+  service            = "vpcaccess.googleapis.com"
+  disable_on_destroy = false
+}
 
 resource "google_compute_network" "vpc" {
   name                    = var.vpc_name
@@ -12,9 +23,10 @@ resource "google_compute_subnetwork" "general_subnet" {
 }
 
 resource "google_compute_subnetwork" "connector_subnet" {
-  name    = "serverless-vpc-connector"
-  region  = var.region
-  network = google_compute_network.vpc.id
+  name          = "serverless-vpc-connector"
+  region        = var.region
+  network       = google_compute_network.vpc.id
+  ip_cidr_range = var.connector_cidr
 }
 
 resource "google_compute_firewall" "allow_internal" {
@@ -32,7 +44,6 @@ resource "google_compute_firewall" "allow_internal" {
 
   allow {
     protocol = "icmp"
-    ports    = ["0-65535"]
   }
   source_ranges = [var.subnet_cidr, var.connector_cidr]
 }
@@ -61,11 +72,12 @@ resource "google_compute_firewall" "allow_health_checks" {
 }
 
 resource "google_vpc_access_connector" "connector" {
-  name   = "asia-seoul-access-connector"
+  name   = "shorturlconnector"
   region = var.region
   subnet {
     name = google_compute_subnetwork.connector_subnet.name
   }
+  depends_on = [google_project_service.vpc_access_api]
 }
 
 resource "google_redis_instance" "redis" {
@@ -73,6 +85,7 @@ resource "google_redis_instance" "redis" {
   memory_size_gb     = var.redis_size
   region             = var.region
   authorized_network = google_compute_network.vpc.id
+  depends_on         = [google_project_service.redis_api]
 }
 
 
