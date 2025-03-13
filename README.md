@@ -51,10 +51,6 @@ docker-compose up -d --build --remove-orphans
 
 ## API Documentation
 
-# URL Shortener API
-
-## API Endpoints
-
 | Method | Endpoint                           | Description                      |
 | ------ | ---------------------------------- | -------------------------------- |
 | POST   | `/api/v1/shorten`                  | Create a new short URL           |
