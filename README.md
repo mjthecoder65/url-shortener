@@ -175,15 +175,16 @@ GET /api/v1/shorten/rt8WMa/stats
 ```sh
 # Set the following environment variables in your terminal. Replace the placehorders
 # with your own values
-export REGION="asia-northeast3"
-export ARTIFACT_REPOSITORY_NAME="url-shortener"
-export GOOGLE_PROJECT_ID="rock-elevator-453623-f5"
-export IMAGE_TAG="v1"
-export IMAGE_NAME="$REGION-docker.pkg.dev/$GOOGLE_PROJECT_ID/$ARTIFACT_REPOSITORY_NAME/url-shortener:$IMAGE_TAG"
+export REGION=asia-northeast3
+export ARTIFACT_REPOSITORY_NAME=url-shortener
+export GOOGLE_PROJECT_ID=rock-elevator-453623-f5
+export IMAGE_TAG=v1
+export IMAGE_NAME="${REGION}-docker.pkg.dev/{$GOOGLE_PROJECT_ID}/${ARTIFACT_REPOSITORY_NAME}/url-shortener:$IMAGE_TAG"
 
 # Create Artifact repository
-gcloud artifacts repositories create $ARTIFACT_REPOSITORY_NAME --repository-format=docker --location=$REGION
-
+gcloud artifacts repositories create "$ARTIFACT_REPOSITORY_NAME" \
+  --repository-format=docker \
+  --location=$REGION
 
 # Authenticate docker to push images to Artifact registry
 gcloud auth configure-docker
@@ -198,11 +199,11 @@ docker push "$IMAGE_NAME"
 ### Deploy to Cloud Run
 
 ```sh
-gcloud run deploy url-shortener \
-  --image $IMAGE_NAME \
-  --platform managed \
-  --region $REGION \
-  --allow-unauthenticated
+  gcloud run deploy url-shortener \
+    --image="$IMAGE_NAME" \
+    --platform=managed \
+    --region="$REGION" \
+    --allow-unauthenticated
 ```
 
 ## License
