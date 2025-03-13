@@ -37,6 +37,7 @@ func SetupRouter(server *Server) *gin.Engine {
 
 	v1 := router.Group("/api/v1")
 	{
+		v1.GET("/health", server.HealthCheck)
 		v1.POST("/shorten", server.CreateShortURL)
 		v1.GET("/shorten/:shortCode", server.GetOrigionalURL)
 		v1.PUT("/shorten/:shortCode", server.UpdateShortURL)
