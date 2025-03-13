@@ -33,20 +33,20 @@ A high-performance URL Shortener API built with Go, Gin, MongoDB, and deployed o
 ### Clone Repository
 
 ```sh
-git clone https://github.com/your-username/url-shortener.git
+git clone https://github.com/mjthecoder65/url-shortener.git
 cd url-shortener
 ```
 
 ### Run Locally
 
 ```sh
-docker-compose up --build
+docker-compose up -d --build --remove-orphans
 ```
 
 ### Run Tests
 
 ```sh
-go test ./...
+  make test
 ```
 
 ## API Documentation
@@ -56,7 +56,7 @@ go test ./...
 **Request:**
 
 ```
-POST /shorten
+POST /api/v1/shorten
 Content-Type: application/json
 
 {
@@ -71,7 +71,7 @@ Content-Type: application/json
 {
   "id": "1",
   "url": "https://www.example.com/some/long/url",
-  "shortCode": "abc123",
+  "shortCode": "rt8WMa",
   "createdAt": "2021-09-01T12:00:00Z",
   "updatedAt": "2021-09-01T12:00:00Z"
 }
@@ -82,7 +82,7 @@ Content-Type: application/json
 **Request:**
 
 ```
-GET /shorten/abc123
+GET /api/v1/shorten/rt8WMa
 ```
 
 **Response:**
@@ -92,7 +92,7 @@ GET /shorten/abc123
 {
   "id": "1",
   "url": "https://www.example.com/some/long/url",
-  "shortCode": "abc123",
+  "shortCode": "rt8WMa",
   "createdAt": "2021-09-01T12:00:00Z",
   "updatedAt": "2021-09-01T12:00:00Z"
 }
@@ -103,7 +103,7 @@ GET /shorten/abc123
 **Request:**
 
 ```
-PUT /shorten/abc123
+PUT /api/v1/shorten/rt8WMa
 Content-Type: application/json
 
 {
@@ -118,9 +118,9 @@ Content-Type: application/json
 {
   "id": "1",
   "url": "https://www.example.com/some/updated/url",
-  "shortCode": "abc123",
-  "createdAt": "2021-09-01T12:00:00Z",
-  "updatedAt": "2021-09-01T12:30:00Z"
+  "shortCode": "rt8WMa",
+  "createdAt": "2025-03-01T12:00:00Z",
+  "updatedAt": "2021-03-12T12:30:00Z"
 }
 ```
 
@@ -129,7 +129,7 @@ Content-Type: application/json
 **Request:**
 
 ```
-DELETE /shorten/abc123
+DELETE /api/v1/shorten/rt8WMa
 ```
 
 **Response:**
@@ -143,7 +143,7 @@ DELETE /shorten/abc123
 **Request:**
 
 ```
-GET /shorten/abc123/stats
+GET /api/v1/shorten/rt8WMa/stats
 ```
 
 **Response:**
@@ -153,7 +153,7 @@ GET /shorten/abc123/stats
 {
   "id": "1",
   "url": "https://www.example.com/some/long/url",
-  "shortCode": "abc123",
+  "shortCode": "rt8WMa",
   "createdAt": "2021-09-01T12:00:00Z",
   "updatedAt": "2021-09-01T12:00:00Z",
   "accessCount": 10
@@ -187,4 +187,4 @@ This project is licensed under the MIT License.
 
 ## Author
 
-[Your Name](https://github.com/your-username)
+[Michael Jordan](https://github.com/mjthecoder65)
