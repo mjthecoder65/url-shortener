@@ -1,6 +1,6 @@
 # URL Shortener API
 
-A URL Shortener API built with Go, Gin, MongoDB, and Redis. This API allows users to create, retrieve, update, delete, and track statistics of shortened URLs. Short URLs are essential in today’s digital landscape as they simplify sharing, improve readability, and save space in character-limited platforms like social media. They also enable better tracking and analytics, making it easier to monitor user engagement. For high availability and fault tolerance, I deployed the service on Google Cloud Run
+A URL Shortener API built with Go, Gin, MongoDB, and Redis. This API allows users to create, retrieve, update, delete, and track statistics of shortened URLs. Short URLs are essential in today’s digital landscape as they simplify sharing, improve readability, and save space in character-limited platforms like social media. They also enable better tracking and analytics, making it easier to monitor user engagement. For high availability and fault tolerance, I deployed the service on Google Cloud Run.
 
 ## Features
 
@@ -18,6 +18,7 @@ A URL Shortener API built with Go, Gin, MongoDB, and Redis. This API allows user
 - **Framework**: Gin
 - **Database**: MongoDB
 - **Containerization**: Docker
+- **Caching**: Redis
 - **CI/CD**: GitHub Actions
 - **Deployment**: Google Cloud Run
 - **Artifact Registry**: Google Artifact Registry
@@ -37,16 +38,39 @@ git clone https://github.com/mjthecoder65/url-shortener.git
 cd url-shortener
 ```
 
-### Run Locally
+### Setting Up Environment Variables
+
+#### **For Local Development**
+
+Create a `.env` file in the root directory and populate it with the required variables:
+
+```sh
+touch .env
+```
+
+**Example `.env` File:**
+
+```env
+APP_ENV=dev # prod, staging
+MONGODB_URI=mongodb://localhost:27017/main
+MONGODB_PASSWORD=your_mongodb_password
+SERVER_PORT=8080
+ALLOWED_CHARS=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
+SHORT_CODE_LENGTH=6
+```
+
+Ensure MongoDB is running locally on port `27017` before starting the application.
+
+### **Run Locally**
 
 ```sh
 docker-compose up -d --build --remove-orphans
 ```
 
-### Run Tests
+### **Run Tests**
 
 ```sh
-  make test
+make test
 ```
 
 ## API Documentation
@@ -59,134 +83,54 @@ docker-compose up -d --build --remove-orphans
 | DELETE | `/api/v1/shorten/:shortCode`       | Delete a short URL               |
 | GET    | `/api/v1/shorten/:shortCode/stats` | Get access count statistics      |
 
-### 1. Create Short URL
+## **Setting Up Secrets and Variables in GitHub Actions**
 
-**Request:**
+To ensure your CI/CD pipeline runs smoothly, you need to set up **secrets** and **variables** in GitHub Actions.
 
-```
-POST /api/v1/shorten
-Content-Type: application/json
+### **1. Setting Up Secrets**
 
-{
-  "url": "https://www.example.com/some/long/url"
-}
-```
+Go to your GitHub repository → **Settings** → **Secrets and variables** → **Actions** → **Secrets** → **New repository secret**
 
-**Response:**
+Add the following secrets:
 
-```
-201 Created
-{
-  "id": "1",
-  "url": "https://www.example.com/some/long/url",
-  "shortCode": "rt8WMa",
-  "createdAt": "2021-09-01T12:00:00Z",
-  "updatedAt": "2021-09-01T12:00:00Z"
-}
-```
+- **`MONGODB_PASSWORD`** → Your MongoDB password
+- **`MONGODB_URI`** → The connection string for MongoDB
+- **`GCP_CREDENTIALS`** → JSON credentials for your Google Cloud service account
 
-### 2. Retrieve Original URL
+### **2. Setting Up Variables**
 
-**Request:**
+Go to **Settings** → **Secrets and variables** → **Actions** → **Variables** → **New repository variable**
 
-```
-GET /api/v1/shorten/rt8WMa
-```
+Add the following variables:
 
-**Response:**
-
-```
-200 OK
-{
-  "id": "1",
-  "url": "https://www.example.com/some/long/url",
-  "shortCode": "rt8WMa",
-  "createdAt": "2021-09-01T12:00:00Z",
-  "updatedAt": "2021-09-01T12:00:00Z"
-}
-```
-
-### 3. Update Short URL
-
-**Request:**
-
-```
-PUT /api/v1/shorten/rt8WMa
-Content-Type: application/json
-
-{
-  "url": "https://www.example.com/some/updated/url"
-}
-```
-
-**Response:**
-
-```
-200 OK
-{
-  "id": "1",
-  "url": "https://www.example.com/some/updated/url",
-  "shortCode": "rt8WMa",
-  "createdAt": "2025-03-01T12:00:00Z",
-  "updatedAt": "2021-03-12T12:30:00Z"
-}
-```
-
-### 4. Delete Short URL
-
-**Request:**
-
-```
-DELETE /api/v1/shorten/rt8WMa
-```
-
-**Response:**
-
-```
-204 No Content
-```
-
-### 5. Get URL Statistics
-
-**Request:**
-
-```
-GET /api/v1/shorten/rt8WMa/stats
-```
-
-**Response:**
-
-```
-200 OK
-{
-  "id": "1",
-  "url": "https://www.example.com/some/long/url",
-  "shortCode": "rt8WMa",
-  "createdAt": "2021-09-01T12:00:00Z",
-  "updatedAt": "2021-09-01T12:00:00Z",
-  "accessCount": 10
-}
-```
+- **`APP_ENV`** → `production` (or `development`)
+- **`SERVER_PORT`** → `8080`
+- **`ALLOWED_CHARS`** → `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`
+- **`SHORT_CODE_LENGTH`** → `6`
+- **`ARTIFACT_REGISTRY_REGION`** → Your Google Cloud region (e.g., `us-central1`)
+- **`GCP_PROJECT_ID`** → Your Google Cloud project ID
+- **`ARTIFACT_REGISTRY_REPO`** → Name of your Google Artifact Registry repo
+- **`CLOUD_RUN_SERVICE_ACCOUNT`** → Email of the service account with Cloud Run deployment permissions
 
 ## Deployment
 
 ### Build and Push Docker Image to Google Artifact Registry
 
 ```sh
-# Set the following environment variables in your terminal. Replace the placehorders
+# Set the following environment variables in your terminal. Replace the placeholders
 # with your own values
 export REGION=asia-northeast3
 export ARTIFACT_REPOSITORY_NAME=url-shortener
 export GOOGLE_PROJECT_ID=rock-elevator-453623-f5
 export IMAGE_TAG=v1
-export IMAGE_NAME="${REGION}-docker.pkg.dev/{$GOOGLE_PROJECT_ID}/${ARTIFACT_REPOSITORY_NAME}/url-shortener:$IMAGE_TAG"
+export IMAGE_NAME="${REGION}-docker.pkg.dev/${GOOGLE_PROJECT_ID}/${ARTIFACT_REPOSITORY_NAME}/url-shortener:$IMAGE_TAG"
 
 # Create Artifact repository
 gcloud artifacts repositories create "$ARTIFACT_REPOSITORY_NAME" \
   --repository-format=docker \
   --location=$REGION
 
-# Authenticate docker to push images to Artifact registry
+# Authenticate Docker to push images to Artifact Registry
 gcloud auth configure-docker
 
 # Build the Docker Image
@@ -199,11 +143,11 @@ docker push "$IMAGE_NAME"
 ### Deploy to Cloud Run
 
 ```sh
-  gcloud run deploy url-shortener \
-    --image="$IMAGE_NAME" \
-    --platform=managed \
-    --region="$REGION" \
-    --allow-unauthenticated
+gcloud run deploy url-shortener \
+  --image="$IMAGE_NAME" \
+  --platform=managed \
+  --region="$REGION" \
+  --allow-unauthenticated
 ```
 
 ## License
