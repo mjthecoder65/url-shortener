@@ -101,8 +101,4 @@ jobs:
             --image ${{ vars.ARTIFACT_REGISTRY_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.ARTIFACT_REGISTRY_REPO }}/url-shortener:${{ github.sha }} \
             --platform managed \
             --region=${{ vars.ARTIFACT_REGISTRY_REGION }} \
-            --set-env-vars=SPRING_PROFILES_ACTIVE=cloudrun
-            --concurrency=80
-            --service-account=cloud-run-runtime@vegax-429008.iam.gserviceaccount.com
-            --allow-unauthenticated
-            --verbosity=debug
+            --allow-unauthenticated \
