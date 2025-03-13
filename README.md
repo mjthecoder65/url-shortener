@@ -51,6 +51,18 @@ docker-compose up -d --build --remove-orphans
 
 ## API Documentation
 
+# URL Shortener API
+
+## API Endpoints
+
+| Method | Endpoint                           | Description                      |
+| ------ | ---------------------------------- | -------------------------------- |
+| POST   | `/api/v1/shorten`                  | Create a new short URL           |
+| GET    | `/api/v1/shorten/:shortCode`       | Retrieve original URL & redirect |
+| PUT    | `/api/v1/shorten/:shortCode`       | Update an existing short URL     |
+| DELETE | `/api/v1/shorten/:shortCode`       | Delete a short URL               |
+| GET    | `/api/v1/shorten/:shortCode/stats` | Get access count statistics      |
+
 ### 1. Create Short URL
 
 **Request:**
