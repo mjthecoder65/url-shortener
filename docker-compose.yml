@@ -11,6 +11,10 @@ services:
       - SERVER_ADDRESS=:8080
       - ALLOWED_CHARS=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
       - SHORT_CODE_LENGTH=6
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_USERNAME=redisuser
+      - REDIS_PASSWORD=k9LmP#QxR24n
     networks:
       - mongo-network
   mongodb:
@@ -25,9 +29,24 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=y7jHf&DNWG15
     networks:
       - mongo-network
+  redis:
+    image: redis:latest
+    restart: always
+    container_name: redis
+    command: redis-server --requirepass k9LmP#QxR24n --user redisuser on >redisuser k9LmP#QxR24n ~* +@all
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    environment:
+      - REDIS_USERNAME=redisuser
+      - REDIS_PASSWORD=k9LmP#QxR24n
+    networks:
+      - mongo-network
 
 volumes:
   mongodb_data:
+  redis_data:
 
 networks:
   mongo-network:
