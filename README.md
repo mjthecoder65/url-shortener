@@ -173,22 +173,26 @@ GET /api/v1/shorten/rt8WMa/stats
 ### Build and Push Docker Image to Google Artifact Registry
 
 ```sh
-export REGION="asia-northeast3"                  # Your preferred GCP region
-export ARTIFACT_REPOSITORY_NAME="url-shortener" # Name of your Artifact Registry repository
-export GOOGLE_PROJECT_ID="rock-elevator-453623-f5" # Your Google Cloud Project ID
-export IMAGE_TAG="v1"                           # Version tag for your Docker image
+# Set the following environment variables in your terminal. Replace the placehorders
+# with your own values
+export REGION="asia-northeast3"
+export ARTIFACT_REPOSITORY_NAME="url-shortener"
+export GOOGLE_PROJECT_ID="rock-elevator-453623-f5"
+export IMAGE_TAG="v1"
+export IMAGE_NAME="$REGION-docker.pkg.dev/$GOOGLE_PROJECT_ID/$ARTIFACT_REPOSITORY_NAME/url-shortener:$IMAGE_TAG"
 
+# Create Artifact repository
 gcloud artifacts repositories create $ARTIFACT_REPOSITORY_NAME --repository-format=docker --location=$REGION
-IMAGE_NAME $REGION-docker.pkg.dev/$GOOGLE_PROJECT_ID/$ARTIFACT_REPOSITORY_NAME/url-shortener:$IMAGE_TAG
+
 
 # Authenticate docker to push images to Artifact registry
 gcloud auth configure-docker
 
 # Build the Docker Image
-docker build -t $IMAGE_NAME .
+docker build -t "$IMAGE_NAME" .
 
 # Push Docker Image to Artifact Registry
-docker push $IMAGE_NAME
+docker push "$IMAGE_NAME"
 ```
 
 ### Deploy to Cloud Run
