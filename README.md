@@ -1,6 +1,6 @@
 # URL Shortener API
 
-A high-performance URL Shortener API built with Go, Gin, MongoDB, and deployed on Cloud Run. This API allows users to create, retrieve, update, delete, and track statistics of shortened URLs.
+A URL Shortener API built with Go, Gin, MongoDB, and Redis. This API allows users to create, retrieve, update, delete, and track statistics of shortened URLs. Short URLs are essential in today’s digital landscape as they simplify sharing, improve readability, and save space in character-limited platforms like social media. They also enable better tracking and analytics, making it easier to monitor user engagement. For high availability and fault tolerance, I deployed the service on Google Cloud Run
 
 ## Features
 
