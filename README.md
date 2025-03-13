@@ -85,6 +85,115 @@ make test
 | DELETE | `/api/v1/shorten/:shortCode`       | Delete a short URL               |
 | GET    | `/api/v1/shorten/:shortCode/stats` | Get access count statistics      |
 
+### 1. Create Short URL
+
+**Request:**
+
+```
+POST /api/v1/shorten
+Content-Type: application/json
+
+{
+  "url": "https://www.example.com/some/long/url"
+}
+```
+
+**Response:**
+
+```
+201 Created
+{
+  "id": "1",
+  "url": "https://www.example.com/some/long/url",
+  "shortCode": "abc123",
+  "createdAt": "2021-09-01T12:00:00Z",
+  "updatedAt": "2021-09-01T12:00:00Z"
+}
+```
+
+### 2. Retrieve Original URL
+
+**Request:**
+
+```
+GET /api/v1/shorten/abc123
+```
+
+**Response:**
+
+```
+200 OK
+{
+  "id": "1",
+  "url": "https://www.example.com/some/long/url",
+  "shortCode": "abc123",
+  "createdAt": "2021-09-01T12:00:00Z",
+  "updatedAt": "2021-09-01T12:00:00Z"
+}
+```
+
+### 3. Update Short URL
+
+**Request:**
+
+```
+PUT /api/v1/shorten/abc123
+Content-Type: application/json
+
+{
+  "url": "https://www.example.com/some/updated/url"
+}
+```
+
+**Response:**
+
+```
+200 OK
+{
+  "id": "1",
+  "url": "https://www.example.com/some/updated/url",
+  "shortCode": "abc123",
+  "createdAt": "2021-09-01T12:00:00Z",
+  "updatedAt": "2021-09-01T12:30:00Z"
+}
+```
+
+### 4. Delete Short URL
+
+**Request:**
+
+```
+DELETE /api/v1/shorten/abc123
+```
+
+**Response:**
+
+```
+204 No Content
+```
+
+### 5. Get URL Statistics
+
+**Request:**
+
+```
+GET /api/v1/shorten/abc123/stats
+```
+
+**Response:**
+
+```
+200 OK
+{
+  "id": "1",
+  "url": "https://www.example.com/some/long/url",
+  "shortCode": "abc123",
+  "createdAt": "2021-09-01T12:00:00Z",
+  "updatedAt": "2021-09-01T12:00:00Z",
+  "accessCount": 10
+}
+```
+
 ## **Setting Up Secrets and Variables in GitHub Actions**
 
 To ensure your CI/CD pipeline runs smoothly, you need to set up **secrets** and **variables** in GitHub Actions.
