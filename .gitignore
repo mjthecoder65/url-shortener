@@ -23,3 +23,34 @@ go.work.sum
 
 # env file
 .env
+
+
+# Terraform state files
+terraform.tfstate
+terraform.tfstate.backup
+*.tfstate
+*.tfstate.*
+
+# Terraform lock file
+.terraform.lock.hcl
+
+# Terraform directory (local provider cache)
+.terraform/
+
+# Plan files
+*.tfplan
+
+# Variables files with sensitive data
+terraform.tfvars
+*.tfvars
+*.tfvars.json
+
+# Override files (used for local overrides)
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Crash logs
+crash.log
+crash.*.log
