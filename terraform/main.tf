@@ -77,7 +77,9 @@ resource "google_vpc_access_connector" "connector" {
   subnet {
     name = google_compute_subnetwork.connector_subnet.name
   }
-  depends_on = [google_project_service.vpc_access_api]
+  depends_on    = [google_project_service.vpc_access_api]
+  min_instances = 2
+  max_instances = 3
 }
 
 resource "google_redis_instance" "redis" {
