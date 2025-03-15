@@ -17,7 +17,6 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	mongoClient := config.GetMongoDBClient(configs)
 	testConfig = configs
 

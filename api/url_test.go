@@ -87,7 +87,8 @@ func TestShortURLAPIs(t *testing.T) {
 		require.Equal(t, shortURL.ShortCode, updatedURL.ShortCode)
 
 		// Test updating non-existent URL
-		nonExistentCode := utils.GenerateShortCode(testConfig)
+		nonExistentCode, err := utils.GenerateShortCode(testConfig)
+		require.NoError(t, err)
 		url = fmt.Sprintf("/api/v1/shorten/%s", nonExistentCode)
 		res = ts.Request("PUT", url, data)
 		require.Equal(t, http.StatusNotFound, res.Code)
@@ -101,7 +102,8 @@ func TestShortURLAPIs(t *testing.T) {
 		require.Equal(t, http.StatusNoContent, res.Code)
 
 		// Test deleting non-existent URL
-		nonExistentCode := utils.GenerateShortCode(testConfig)
+		nonExistentCode, err := utils.GenerateShortCode(testConfig)
+		fmt.Println(nonExistentCode, err)
 		url = fmt.Sprintf("/api/v1/shorten/%s", nonExistentCode)
 		res = ts.Request("DELETE", url, nil)
 		require.Equal(t, http.StatusNotFound, res.Code)
