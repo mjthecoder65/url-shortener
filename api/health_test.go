@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestHeal(t *testing.T) {
+func TestHealthCheck(t *testing.T) {
 	req, err := http.NewRequest("GET", "/api/v1/health", nil)
 	require.NoError(t, err)
 

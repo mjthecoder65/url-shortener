@@ -20,10 +20,17 @@ func (q *Queries) CreateShortURL(ctx context.Context, config *config.Config, arg
 	collection := q.client.Database("main").Collection("urls")
 
 	var shortCode string
+	var err error
 
 	for {
-		shortCode = utils.GenerateShortCode(config)
-		count, err := collection.CountDocuments(ctx, bson.M{"shortCoce": shortCode})
+
+		shortCode, err = utils.GenerateShortCode(config)
+
+		if err != nil {
+			return URL{}, nil
+		}
+
+		count, err := collection.CountDocuments(ctx, bson.M{"shortCode": shortCode})
 
 		if err != nil {
 			return URL{}, nil

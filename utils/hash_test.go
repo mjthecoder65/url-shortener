@@ -7,8 +7,8 @@ import (
 )
 
 func TestGenerateShortCode(t *testing.T) {
-	shortCode := GenerateShortCode(testConfig)
-
+	shortCode, err := GenerateShortCode(testConfig)
+	require.NoError(t, err)
 	require.NotEmpty(t, shortCode)
 	require.Equal(t, testConfig.ShortCodeLength, len(shortCode))
 }

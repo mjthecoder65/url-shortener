@@ -1,21 +1,25 @@
 package utils
 
 import (
-	"math/rand"
-	"time"
+	"crypto/rand"
+	"math/big"
 
 	"github.com/mjthecoder65/url-shortener/config"
 )
 
-var seedRand = rand.New(rand.NewSource(time.Now().UnixNano()))
-
-func GenerateShortCode(config *config.Config) string {
-
+func GenerateShortCode(config *config.Config) (string, error) {
 	result := make([]byte, config.ShortCodeLength)
+	charLength := big.NewInt(int64(len(config.AllowedChars)))
 
 	for i := 0; i < config.ShortCodeLength; i++ {
-		result[i] = config.AllowedChars[seedRand.Intn(len(config.AllowedChars))]
+		randomIndex, err := rand.Int(rand.Reader, charLength)
+
+		if err != nil {
+			return "", err
+		}
+
+		result[i] = config.AllowedChars[randomIndex.Int64()]
 	}
 
-	return string(result)
+	return string(result), nil
 }

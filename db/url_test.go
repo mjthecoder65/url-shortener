@@ -38,7 +38,8 @@ func TestGetShortUrl(t *testing.T) {
 	require.Equal(t, result.ShortCode, shortUrl.ShortCode)
 	require.Equal(t, shortUrl.URL, result.URL)
 
-	shortCode := utils.GenerateShortCode(testConfig)
+	shortCode, err := utils.GenerateShortCode(testConfig)
+	require.NoError(t, err)
 	require.Equal(t, len(shortCode), testConfig.ShortCodeLength)
 
 	result, err = testQueries.GetShortURL(context.Background(), shortCode)

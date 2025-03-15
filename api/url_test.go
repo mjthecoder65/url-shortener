@@ -26,9 +26,11 @@ func newTestServer() *testServer {
 
 func (ts *testServer) Request(method, url string, body []byte) *httptest.ResponseRecorder {
 	req, err := http.NewRequest(method, url, bytes.NewBuffer(body))
+
 	if err != nil {
 		panic(fmt.Sprintf("Failed to create request: %v", err))
 	}
+
 	res := httptest.NewRecorder()
 	ts.router.ServeHTTP(res, req)
 	return res
@@ -87,7 +89,8 @@ func TestShortURLAPIs(t *testing.T) {
 		require.Equal(t, shortURL.ShortCode, updatedURL.ShortCode)
 
 		// Test updating non-existent URL
-		nonExistentCode := utils.GenerateShortCode(testConfig)
+		nonExistentCode, err := utils.GenerateShortCode(testConfig)
+		require.NoError(t, err)
 		url = fmt.Sprintf("/api/v1/shorten/%s", nonExistentCode)
 		res = ts.Request("PUT", url, data)
 		require.Equal(t, http.StatusNotFound, res.Code)
@@ -101,7 +104,8 @@ func TestShortURLAPIs(t *testing.T) {
 		require.Equal(t, http.StatusNoContent, res.Code)
 
 		// Test deleting non-existent URL
-		nonExistentCode := utils.GenerateShortCode(testConfig)
+		nonExistentCode, err := utils.GenerateShortCode(testConfig)
+		require.NoError(t, err)
 		url = fmt.Sprintf("/api/v1/shorten/%s", nonExistentCode)
 		res = ts.Request("DELETE", url, nil)
 		require.Equal(t, http.StatusNotFound, res.Code)
