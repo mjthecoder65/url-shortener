@@ -7,7 +7,7 @@ import (
 	"github.com/mjthecoder65/url-shortener/config"
 )
 
-func GenerateShortCode(config *config.Config) string {
+func GenerateShortCode(config *config.Config) (string, error) {
 	result := make([]byte, config.ShortCodeLength)
 	charLength := big.NewInt(int64(len(config.AllowedChars)))
 
