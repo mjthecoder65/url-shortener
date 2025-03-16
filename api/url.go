@@ -34,12 +34,7 @@ func (server *Server) CreateShortURL(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, url)
 }
 
-func (server *Server) GetOrigionalURL(ctx *gin.Context) {
-	/*Choose two options:
-	1. Redirect to  301 or 302
-	2. Return short url JSON body and let the frontend redirect.
-	*/
-
+func (server *Server) GetOriginalURL(ctx *gin.Context) {
 	shortCode := ctx.Param("shortCode")
 	url, err := server.queries.GetShortURL(context.Background(), shortCode)
 
@@ -49,6 +44,7 @@ func (server *Server) GetOrigionalURL(ctx *gin.Context) {
 			return
 		}
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
 	}
 
 	ctx.JSON(http.StatusOK, url)
@@ -95,6 +91,8 @@ func (server *Server) DeleteShortURL(ctx *gin.Context) {
 			ctx.JSON(http.StatusNotFound, errorResponse(err))
 			return
 		}
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
 	}
 	ctx.JSON(http.StatusNoContent, nil)
 }

@@ -39,7 +39,7 @@ func SetupRouter(server *Server) *gin.Engine {
 	{
 		v1.GET("/health", server.HealthCheck)
 		v1.POST("/shorten", server.CreateShortURL)
-		v1.GET("/shorten/:shortCode", server.GetOrigionalURL)
+		v1.GET("/shorten/:shortCode", server.GetOriginalURL)
 		v1.PUT("/shorten/:shortCode", server.UpdateShortURL)
 		v1.DELETE("/shorten/:shortCode", server.DeleteShortURL)
 		v1.GET("/shorten/:shortCode/stats", server.GetURLStats)
