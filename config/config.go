@@ -10,11 +10,12 @@ import (
 )
 
 type Config struct {
-	MongoDBURI      string `json:"database_url"`
-	ServerPort      string `json:""`
-	ShortCodeLength int    `json:"short_code_length"`
-	AllowedChars    string `json:"allowed_chars"`
-	AppEnv          string `json:"app_env"`
+	MongoDBURI      string
+	ServerPort      string
+	ShortCodeLength int
+	AllowedChars    string
+	AppEnv          string
+	DBTimeout       int
 }
 
 func LoadConfigs(envFilePath string) (*Config, error) {
@@ -35,6 +36,7 @@ func LoadConfigs(envFilePath string) (*Config, error) {
 		ShortCodeLength: shortCodeLength,
 		AllowedChars:    getEnv("ALLOWED_CHARS"),
 		AppEnv:          getEnv("APP_ENV"),
+		DBTimeout:       5,
 	}, nil
 }
 
