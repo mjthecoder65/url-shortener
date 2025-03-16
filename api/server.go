@@ -9,6 +9,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/mjthecoder65/url-shortener/config"
 	"github.com/mjthecoder65/url-shortener/db"
+	"github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -16,6 +17,16 @@ type Server struct {
 	config  *config.Config
 	queries *db.Queries
 	router  *gin.Engine
+	logger  *logrus.Logger
+}
+
+func NewLogger() *logrus.Logger {
+	logger := logrus.New()
+	logger.SetFormatter(&logrus.TextFormatter{
+		FullTimestamp: true,
+	})
+	logger.SetLevel(logrus.DebugLevel)
+	return logger
 }
 
 func NewServer(config *config.Config, mongoClient *mongo.Client) (*Server, error) {
@@ -26,6 +37,7 @@ func NewServer(config *config.Config, mongoClient *mongo.Client) (*Server, error
 	server := &Server{
 		config:  config,
 		queries: db.New(mongoClient),
+		logger:  NewLogger(),
 	}
 
 	router := SetupRouter(server)
