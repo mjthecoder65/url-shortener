@@ -2,8 +2,11 @@ package api
 
 import (
 	"log"
+	"net/url"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/go-playground/validator/v10"
 	"github.com/mjthecoder65/url-shortener/config"
 	"github.com/mjthecoder65/url-shortener/db"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -35,6 +38,10 @@ func NewServer(config *config.Config, mongoClient *mongo.Client) (*Server, error
 func SetupRouter(server *Server) *gin.Engine {
 	router := gin.Default()
 
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		v.RegisterValidation("httpurl", urlValidator)
+	}
+
 	v1 := router.Group("/api/v1")
 	{
 		v1.GET("/health", server.HealthCheck)
@@ -54,4 +61,9 @@ func (server *Server) Start() error {
 		log.Printf("Server listening on port %v\n", server.config.ServerPort)
 	}
 	return err
+}
+
+func urlValidator(fl validator.FieldLevel) bool {
+	u, err := url.ParseRequestURI(fl.Field().String())
+	return err == nil && (u.Scheme == "http" || u.Scheme == "https")
 }
