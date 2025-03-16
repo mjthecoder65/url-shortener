@@ -10,7 +10,7 @@ import (
 )
 
 type CreateShortURLRequest struct {
-	URL string `json:"url" binding:"required"`
+	URL string `json:"url" binding:"required,httpurl"`
 }
 
 func (server *Server) CreateShortURL(ctx *gin.Context) {
@@ -51,7 +51,7 @@ func (server *Server) GetOriginalURL(ctx *gin.Context) {
 }
 
 type UpdateShortURLRequest struct {
-	URL string `json:"url" binding:"required"`
+	URL string `json:"url" binding:"required,httpurl"`
 }
 
 func (server *Server) UpdateShortURL(ctx *gin.Context) {
