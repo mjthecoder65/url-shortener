@@ -68,6 +68,17 @@ func TestShortURLAPIs(t *testing.T) {
 		require.NoError(t, err)
 		require.Equal(t, shortURL.URL, retrievedURL.URL)
 		require.Equal(t, shortURL.ShortCode, retrievedURL.ShortCode)
+
+		// creating non-url
+		payload := CreateShortURLRequest{
+			URL: faker.DomainName(),
+		}
+
+		data, err := json.Marshal(payload)
+		require.NoError(t, err)
+		res = ts.Request("POST", "/api/v1/shorten", data)
+		require.Equal(t, http.StatusBadRequest, res.Code)
+
 	})
 
 	t.Run("Update Short URL", func(t *testing.T) {
