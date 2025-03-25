@@ -3,7 +3,6 @@ package api
 import (
 	"context"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/mjthecoder65/url-shortener/db"
@@ -37,7 +36,7 @@ func (server *Server) CreateShortURL(ctx *gin.Context) {
 		URL: req.URL,
 	}
 
-	dbContext, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	dbContext, cancel := context.WithTimeout(context.Background(), server.config.DBTimeout)
 	defer cancel()
 
 	url, err := server.queries.CreateShortURL(dbContext, server.config, arg)
@@ -70,7 +69,7 @@ func (server *Server) GetOriginalURL(ctx *gin.Context) {
 		return
 	}
 
-	dbContext, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	dbContext, cancel := context.WithTimeout(context.Background(), server.config.DBTimeout)
 	defer cancel()
 
 	url, err := server.queries.GetShortURL(dbContext, shortCode)
@@ -131,7 +130,7 @@ func (server *Server) UpdateShortURL(ctx *gin.Context) {
 		URL:       req.URL,
 	}
 
-	dbContext, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	dbContext, cancel := context.WithTimeout(context.Background(), server.config.DBTimeout)
 	defer cancel()
 
 	url, err := server.queries.UpdateShortURL(dbContext, arg)
@@ -171,7 +170,7 @@ func (server *Server) DeleteShortURL(ctx *gin.Context) {
 		return
 	}
 
-	dbContext, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	dbContext, cancel := context.WithTimeout(context.Background(), server.config.DBTimeout)
 	defer cancel()
 
 	err := server.queries.DeleteShortURL(dbContext, shortCode)
@@ -210,10 +209,11 @@ func (server *Server) GetURLStats(ctx *gin.Context) {
 		return
 	}
 
-	dbContext, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	dbContext, cancel := context.WithTimeout(context.Background(), server.config.DBTimeout)
 	defer cancel()
 
 	url, err := server.queries.GetShortURLStats(dbContext, shortCode)
+
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
 			server.logger.WithFields(logrus.Fields{

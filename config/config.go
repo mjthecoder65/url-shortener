@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/joho/godotenv"
 )
@@ -15,7 +16,7 @@ type Config struct {
 	ShortCodeLength int
 	AllowedChars    string
 	AppEnv          string
-	DBTimeout       int
+	DBTimeout       time.Duration
 }
 
 func LoadConfigs(envFilePath string) (*Config, error) {
@@ -36,7 +37,7 @@ func LoadConfigs(envFilePath string) (*Config, error) {
 		ShortCodeLength: shortCodeLength,
 		AllowedChars:    getEnv("ALLOWED_CHARS"),
 		AppEnv:          getEnv("APP_ENV"),
-		DBTimeout:       5,
+		DBTimeout:       5 * time.Second,
 	}, nil
 }
 
