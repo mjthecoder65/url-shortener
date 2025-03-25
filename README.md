@@ -225,6 +225,38 @@ Add the following variables:
 
 ## Deployment
 
+## Terraform Infrastructure Setup
+
+This project uses Terraform to provision and manage the infrastructure required for deploying the URL Shortener API on Google Cloud Platform (GCP). The Terraform configuration automates the creation of networking resources, a Redis instance, an Artifact Registry repository, and a service account for CI/CD deployment via GitHub Actions.
+
+### Terraform Resources
+
+The Terraform configuration provisions the following resources:
+
+| Resource Type                         | Name                              | Description                                                                                                           |
+| ------------------------------------- | --------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `google_project_service`              | `redis_api`                       | Enables the Redis API for Memorystore.                                                                                |
+| `google_project_service`              | `vpc_access_api`                  | Enables the VPC Access API for serverless VPC connectors.                                                             |
+| `google_compute_network`              | `var.vpc_name`                    | Custom VPC network for the application (no auto-created subnets).                                                     |
+| `google_compute_subnetwork`           | `asia-seoul-subnet`               | Subnetwork for general resources in the specified region.                                                             |
+| `google_compute_subnetwork`           | `serverless-vpc-connector`        | Subnetwork for the serverless VPC connector.                                                                          |
+| `google_compute_firewall`             | `allow-internal`                  | Firewall rule allowing all TCP/UDP/ICMP traffic within VPC subnets.                                                   |
+| `google_compute_firewall`             | `allow-connector`                 | Firewall rule allowing Redis traffic (port 6379) from the VPC connector.                                              |
+| `google_compute_firewall`             | `allow-health-checks`             | Firewall rule allowing health checks from Google's IP ranges.                                                         |
+| `google_vpc_access_connector`         | `shorturlconnector`               | Serverless VPC connector for connecting Cloud Run to the VPC (2-3 instances).                                         |
+| `google_redis_instance`               | `redis`                           | Managed Redis instance for caching (size configurable via `redis_size`).                                              |
+| `google_artifact_registry_repository` | `var.artifact_registry_repo_name` | Docker repository in Artifact Registry for storing container images.                                                  |
+| `google_service_account`              | `github-actions-deployer`         | Service account for GitHub Actions to deploy to Cloud Run.                                                            |
+| `google_project_iam_member`           | Multiple roles                    | IAM roles for the service account: `run.admin`, `artifactregistry.writer`, `iam.serviceAccountUser`, `storage.admin`. |
+| `google_service_account_key`          | `github_deployer_key`             | Key for the service account, used in GitHub Actions secrets.                                                          |
+
+### Prerequisites for Terraform
+
+- **Terraform**: Install Terraform (>=1.0) on your local machine.
+- **Google Cloud SDK**: Install and authenticate `gcloud` with your GCP account.
+- **GCP Project**: A Google Cloud project with billing enabled.
+- **Service Account**: A GCP service account with permissions to manage resources (e.g., `Owner` or specific IAM roles).
+
 ### Build and Push Docker Image to Google Artifact Registry
 
 ```sh
