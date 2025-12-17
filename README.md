@@ -2,7 +2,7 @@
 
 A URL Shortener API built with Go, Gin, MongoDB, and Redis. This API allows users to create, retrieve, update, delete, and track statistics of shortened URLs. Short URLs are essential in today’s digital landscape as they simplify sharing, improve readability, and save space in character-limited platforms like social media. They also enable better tracking and analytics, making it easier to monitor user engagement. For high availability and fault tolerance, I deployed the service on Google Cloud Run.
 
-This project was implemented based on the roadmap requirements [roadmap.sh](https://roadmap.sh/projects/url-shortening-service).
+The project was implemented based on the roadmap requirements [roadmap.sh](https://roadmap.sh/projects/url-shortening-service).
 
 ## Features
 
